@@ -7,6 +7,9 @@
 </template>
 
 <script>
+import rcApi from './api'
+let api = null
+
 import Auth from './components/Auth.vue'
 import ChatBox from './components/ChatBox.vue'
 import Account from './components/Account.vue'
@@ -47,7 +50,26 @@ export default {
     }
   },
   mounted() {
-    
+    api = rcApi.connectToRocketChat (this.webSocketUrl)
+    api.onError (error => this.errors.push (error))
+    api.onCompletion (() => console.log ("finished"))
+    api.onMessage (message => {
+      console.log('onMessage', message);
+
+      // store message from server chat
+      this.messages.push (message);
+      
+    })
+    // ping server to keepAlive
+    api.connectToServer ()
+      .subscribe (() => {
+          api.keepAlive ().subscribe(); // Ping Server
+        },
+        (error) => {
+          console.log('ping server error', error);
+          this.errors.push (error)
+        }
+      )
   },
   watch: {
     

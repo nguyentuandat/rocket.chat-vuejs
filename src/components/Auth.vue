@@ -3,8 +3,8 @@
     <h1>Đăng nhập</h1>
 
     <form method="post" action="" v-on:submit.prevent="loginBS">
-      <input type="text" required id="username" v-model="username" name="username" placeholder="Username: aaa" />
-      <input type="password" required id="password" v-model="password" name="password" placeholder="Password: 111111" />
+      <input type="text" required id="username" v-model="username" name="username" autocomplete="username" placeholder="Username: aaa" />
+      <input type="password" required id="password" v-model="password" name="password" autocomplete="current-password" placeholder="Password: 111111" />
       <input type="submit" value="Đăng nhập" />
     </form>
   </div>
