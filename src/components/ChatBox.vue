@@ -24,7 +24,7 @@
       </ul>
       <form class="chat-form" method="post" action="" v-on:submit.prevent="sendMsg">
         <input type="text" v-model="newMessage" required id="txtMessage" name="message" placeholder="Nhập nôi dung" />
-        <button type="submit" v-on:click="sendMsg" value="Gửi" >Gửi</button>
+        <button type="submit" value="Gửi" >Gửi</button>
       </form>
     </div>
     

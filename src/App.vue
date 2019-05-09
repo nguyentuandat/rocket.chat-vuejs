@@ -40,13 +40,7 @@ export default {
       roomConnected: false,
       newMessage: '',
       messages: [],
-      roomMessages: [ // fake data
-        {"_id":"1556998652503","rid":"GENERAL","msg":"Hello 1","ts":{"$date":1556998652571},"u":{"_id":"aaa","username":"aaa","name":"User aaa"},"_updatedAt":{"$date":1556998652625},"mentions":[],"channels":[]},
-        {"_id":"1556998652503","rid":"GENERAL","msg":"Hello 2","ts":{"$date":1556998652571},"u":{"_id":"9D35huFxq7A4LnqT9","username":"bbb","name":"User aaa"},"_updatedAt":{"$date":1556998652625},"mentions":[],"channels":[]},
-        {"_id":"1556998652503","rid":"GENERAL","msg":"Hello 3","ts":{"$date":1556998652571},"u":{"_id":"9D35huFxq7A4LnqT9","username":"ddd","name":"User aaa"},"_updatedAt":{"$date":1556998652625},"mentions":[],"channels":[]},
-        {"_id":"1556998652503","rid":"GENERAL","msg":"Hello 4","ts":{"$date":1556998652571},"u":{"_id":"aaa","username":"aaa","name":"User aaa"},"_updatedAt":{"$date":1556998652625},"mentions":[],"channels":[]},
-        {"_id":"1556998652503","rid":"GENERAL","msg":"Hello 5","ts":{"$date":1556998652571},"u":{"_id":"9D35huFxq7A4LnqT9","username":"ccc","name":"User aaa"},"_updatedAt":{"$date":1556998652625},"mentions":[],"channels":[]}  
-      ],
+      roomMessages: [],
       errors: [],
       useSsl: false,
     }
@@ -60,6 +54,12 @@ export default {
 
       // store message from server chat
       this.messages.push (message);
+
+      if(message.msg=== 'changed' && message.collection === 'stream-room-messages'
+        && message.fields !== undefined && message.fields.args !== undefined){
+        Array.prototype.push.apply(this.roomMessages, message.fields.args);
+        this.roomMessages.splice(this.roomMessages.length);
+      }
       
     })
     // ping server to keepAlive
@@ -90,6 +90,7 @@ export default {
       // init room, get room history
       if(val === true && oldVal === false){
         this.loadHistory();
+        this.connectRoom();
       }
     }
   },
@@ -172,6 +173,17 @@ export default {
     },
     connectRoom() {
       console.log('stream a room');
+      if (!this.roomConnected) {
+        api.sendMessage ({
+          "msg": "sub",
+          "id": '' + new Date ().getTime (),
+          "name": "stream-room-messages",
+          "params": [
+            this.roomId,
+            false
+          ]
+        })
+      }
     },
     sendMessage(msg) {
       console.log('send new message');
