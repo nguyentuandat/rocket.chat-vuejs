@@ -12,9 +12,9 @@ cp .env.sample .env
 Open .env and update your information
 
 ```
-VUE_APP_SOCKET_URL
-VUE_APP_SERVER_CHAT_URL
-VUE_APP_OAUTH_SERVICE_NAME
+VUE_APP_SOCKET_URL=wss://localhost:3000/websocket
+VUE_APP_SERVER_CHAT_URL=http://localhost:3000
+VUE_APP_OAUTH_SERVICE_NAME=service-name
 ```
 
 ### Compiles and hot-reloads for development
