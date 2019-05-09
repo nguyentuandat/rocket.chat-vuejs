@@ -1,12 +1,14 @@
 <template>
   <div id="app">
-    <Auth v-if="!loggedIn"  v-bind:loginBasic="loginBasic" msg="Login" />
+    <Auth v-if="!loggedIn"  v-bind:loginBasic="loginBasic" v-bind:loginWithCustomOAuth="loginWithCustomOAuth" msg="Login" />
     <Account v-if="loggedIn"  v-bind:logoutUser="logoutUser" v-bind:username="username"  />
     <ChatBox v-if="loggedIn" v-bind:sendMessage="sendMessage" v-bind:currentId="userId" v-bind:messages="roomMessages" />
   </div>
 </template>
 
 <script>
+import axios from 'axios';
+
 import rcApi from './api'
 let api = null
 
@@ -77,6 +79,39 @@ export default {
   methods: {
     login() {
       console.log('login with token');
+    },
+    async loginWithCustomOAuth(userId, username){
+      var data = {
+        "serviceName": settings.serviceName, // Tên của Custom OAuth service
+        "accessToken": "access-token",
+        "expiresIn": 200000,
+        identity: {
+            id: userId, //một chuỗi duy nhất đi theo một username duy nhất từ Custom OAuth service
+            username: username, // username
+            roles: ['user']
+        }
+      };
+
+      this.username = username;
+      try {
+        const response = await axios.post(`${settings.serverUrl}/api/v1/login`, data);
+
+        console.log(response);
+
+        if(response.status === 200 && response.data.status=== 'success'){
+
+          // store in localStorage
+          window.localStorage.setItem('authToken', response.data.data.authToken);
+          window.localStorage.setItem('userId', response.data.data.userId);
+
+          this.authToken = response.data.data.authToken;
+          this.userId = response.data.data.userId;
+
+          // do more
+        }
+      }catch (error) {
+        console.error(error);
+      }
     },
     loginWithOAuth(){
       console.log('login with OAuth');

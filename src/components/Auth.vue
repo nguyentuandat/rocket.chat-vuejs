@@ -7,6 +7,12 @@
       <input type="password" required id="password" v-model="password" name="password" autocomplete="current-password" placeholder="Password: 111111" />
       <input type="submit" value="Đăng nhập" />
     </form>
+    <p>Hoặc </p>
+    <form method="post" action="" v-on:submit.prevent="loginOauth">
+      <input type="text" required id="username-2" v-model="username" name="username" autocomplete="username" placeholder="Username: aaa" />
+      <input type="text" required id="userId" v-model="userId" name="userId" autocomplete="userId" placeholder="userId: aaa" />
+      <input type="submit" value="Đăng nhập" />
+    </form>
   </div>
 </template>
 
@@ -16,16 +22,21 @@ export default {
   data() {
     return {
       username: '',
+      userId: '',
       password: ''
     }
   },
   props: {
     msg: String,
     loginBasic: Function,
+    loginWithCustomOAuth: Function
   },
   methods: {
     loginBS: function() {
       this.loginBasic(this.username, this.password)
+    },
+    loginOauth: function(){
+      this.loginWithCustomOAuth(this.userId, this.username);
     }
   }
 }
