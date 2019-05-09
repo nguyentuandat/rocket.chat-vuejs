@@ -86,7 +86,12 @@ export default {
     }
   },
   watch: {
-    
+    loggedIn: function (val, oldVal) {
+      // init room, get room history
+      if(val === true && oldVal === false){
+        this.loadHistory();
+      }
+    }
   },
   methods: {
     login() {
@@ -158,6 +163,12 @@ export default {
     },
     loadHistory() {
       console.log('load room history');
+      api.callMethod('loadHistory', this.roomId, null, 50)
+        .subscribe (apiEvent => {
+          if (apiEvent.msg === 'result' && apiEvent.result !== undefined && apiEvent.result.messages !== undefined) {
+            this.roomMessages = apiEvent.result.messages.reverse();
+          }
+        });
     },
     connectRoom() {
       console.log('stream a room');
