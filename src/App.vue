@@ -124,6 +124,8 @@ export default {
       };
 
       this.username = username;
+      window.localStorage.setItem('username', username);
+
       try {
         const response = await axios.post(`${settings.serverUrl}/api/v1/login`, data);
 
@@ -161,8 +163,8 @@ export default {
               this.authToken = apiEvent.result.token;
               window.localStorage.setItem('username', username);
               this.username = username;
-              window.localStorage.setItem('rc_id', apiEvent.result.id);
-              window.localStorage.setItem('rc_token', apiEvent.result.token);
+              window.localStorage.setItem('userId', apiEvent.result.id);
+              window.localStorage.setItem('authToken', apiEvent.result.token);
               window.localStorage.setItem('rc_expiry', apiEvent.result.tokenExpires.$date);
               
             } else {
