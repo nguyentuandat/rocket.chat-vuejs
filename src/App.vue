@@ -173,8 +173,21 @@ export default {
     connectRoom() {
       console.log('stream a room');
     },
-    sendMessage() {
+    sendMessage(msg) {
       console.log('send new message');
+      api.sendMessage ({
+        "msg": "method",
+        "method": "sendMessage",
+        "id": '' + new Date ().getTime (),
+        "params": [
+          {
+            "_id": '' + new Date ().getTime (),
+            "rid": this.roomId,
+            "msg": msg
+          }
+        ]
+      })
+      this.newMessage = ''
     },
   }
 }

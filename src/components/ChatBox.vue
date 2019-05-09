@@ -61,7 +61,11 @@ export default {
   },
   methods: {
     sendMsg: function() {
-      console.log('send new message action');
+      if(!this.newMessage){
+        return;
+      }
+      console.log('sending message with content', this.newMessage);
+      this.sendMessage(this.newMessage);
     },
     scrollToEnd: function() {    	
       var container = this.$el.querySelector("#chatboxList");
