@@ -72,13 +72,39 @@ export default {
           this.errors.push (error)
         }
       )
+
+    // check logged in
+    const rc_expiry = window.localStorage.getItem('rc_expiry');
+    let now = new Date ().getTime ();
+
+    if(now < rc_expiry){
+      const rc_token = window.localStorage.getItem('authToken');
+      const rc_id = window.localStorage.getItem('userId');
+      this.userId = rc_id;
+      this.authToken = rc_token;
+      this.login();
+    }
   },
   watch: {
     
   },
   methods: {
     login() {
-      console.log('login with token');
+      // console.log('login with token');
+      if (!this.loggedIn) {
+        api.loginWithAuthToken (this.authToken)
+          .subscribe (apiEvent => {
+            if (apiEvent.msg === 'result') {
+              // success
+              this.messages.push (apiEvent.msg)
+
+              window.localStorage.setItem('rc_expiry', apiEvent.result.tokenExpires.$date);
+              this.loggedIn = true
+            }
+          }, (error) => {
+            this.errors.push (error)
+          })
+      }
     },
     async loginWithCustomOAuth(userId, username){
       var data = {
@@ -108,6 +134,7 @@ export default {
           this.userId = response.data.data.userId;
 
           // do more
+          this.login();
         }
       }catch (error) {
         console.error(error);
