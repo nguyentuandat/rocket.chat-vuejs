@@ -14,6 +14,7 @@ export default {
   methods: {
     logout(){
       console.log('logout action');
+      this.logoutUser();
     },
   }
 }

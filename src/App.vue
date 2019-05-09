@@ -148,6 +148,13 @@ export default {
     },
     logoutUser(){
       console.log('logout');
+      api.callMethod('logout')
+      .subscribe (() => {
+        window.localStorage.removeItem('userId');
+        window.localStorage.removeItem('authToken');
+        window.localStorage.removeItem('rc_expiry');
+        this.loggedIn = false;
+      });
     },
     loadHistory() {
       console.log('load room history');
