@@ -125,6 +125,8 @@ export default {
       };
 
       this.username = username;
+      window.localStorage.setItem('username', username);
+
       try {
         const response = await axios.post(`${settings.serverUrl}/api/v1/login`, data);
 
@@ -149,8 +151,31 @@ export default {
     loginWithOAuth(){
       console.log('login with OAuth');
     },
-    loginBasic() {
-      console.log('login with password');
+    loginBasic(username, password) {
+      if (!this.loggedIn) {
+        api.login (username, password)
+          .subscribe (apiEvent => {
+            if (apiEvent.msg === 'result' && apiEvent.result !== undefined) {
+              // success
+              console.log('token exp', new Date (apiEvent.result.tokenExpires.$date));
+              this.messages.push (apiEvent.msg)
+              this.loggedIn = true;
+              this.userId = apiEvent.result.id;
+              this.authToken = apiEvent.result.token;
+              window.localStorage.setItem('username', username);
+              this.username = username;
+              window.localStorage.setItem('userId', apiEvent.result.id);
+              window.localStorage.setItem('authToken', apiEvent.result.token);
+              window.localStorage.setItem('rc_expiry', apiEvent.result.tokenExpires.$date);
+              
+            } else {
+              console.log('Auth fail');
+            }
+          }, (error) => {
+            console.log('Can not log in right now');
+            this.errors.push (error)
+          })
+      }
     },
     logoutUser(){
       console.log('logout');
