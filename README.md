@@ -5,6 +5,18 @@
 yarn install
 ```
 
+```bash
+cp .env.sample .env
+```
+
+Open .env and update your information
+
+```
+VUE_APP_SOCKET_URL
+VUE_APP_SERVER_CHAT_URL
+VUE_APP_OAUTH_SERVICE_NAME
+```
+
 ### Compiles and hot-reloads for development
 ```
 yarn run serve
